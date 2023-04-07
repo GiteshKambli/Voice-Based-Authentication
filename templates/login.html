@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        {% block content %}
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <input type="text" placeholder="email" name="email" >
+        <input type="submit">
+        <p>To authenticate Yorself, Press on the submit button and say the following sentences out loud</p>
+        <p>I confirm my identity using my voice.</p>
+        <p>My voice is the key to my account</p>
+        </form>
+        {% endblock %}
+    </center>
+    
+    
+</body>
+</html>

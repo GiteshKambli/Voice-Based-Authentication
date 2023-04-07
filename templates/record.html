@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Audio Recorder</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css'%}" />
+</head>
+<body>
+	{% block content %}
+	<!-- <form method="post" enctype="multipart/form-data">{% csrf_token %} -->
+	<h1>Audio Recorder</h1>
+	<p>Click the record button to start recording your audio.</p>
+	<button id="recordButton">Record</button>
+	<p id="recordingStatus"></p>
+	<ul id="recordingsList"></ul>
+	<button id="submitButton" >Submit</button>
+
+	<script>
+		var recordings = [];
+		var counter = 0;
+		var mediaRecorder;
+		var chunks = [];
+
+		var recordButton = document.getElementById('recordButton');
+		var recordingStatus = document.getElementById('recordingStatus');
+		var recordingsList = document.getElementById('recordingsList');
+		var submitButton = document.getElementById('submitButton');
+
+		// Check if browser supports MediaRecorder
+		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder) {
+
+			// Get audio stream from user's microphone
+			navigator.mediaDevices.getUserMedia({ audio: true })
+				.then(function(stream) {
+					// Create MediaRecorder object
+					mediaRecorder = new MediaRecorder(stream);
+
+					// Handle data available event
+					mediaRecorder.addEventListener('dataavailable', function(event) {
+						chunks.push(event.data);
+					});
+
+					// Handle stop event
+					mediaRecorder.addEventListener('stop', function() {
+						var blob = new Blob(chunks, { type: 'audio/wav'});
+						chunks = [];
+						var url = URL.createObjectURL(blob);
+						var recording = { url: url, blob: blob };
+						
+						if (counter < 10) {
+							recordings.push(recording);
+							counter++;
+							if (counter === 10){
+								submitButton.disabled = false;
+							}
+						} else {
+							recordingStatus.textContent = 'Maximum recordings reached';
+							return;
+						}
+
+						// Create recording list item and audio element
+						var li = document.createElement('li');
+						var audio = document.createElement('audio');
+						var deleteButton = document.createElement('button');
+						audio.controls = true;
+						audio.src = recording.url;
+						deleteButton.textContent = 'Delete';
+						li.appendChild(audio);
+						li.appendChild(deleteButton);
+						recordingsList.appendChild(li);
+
+						// Add delete button functionality
+						deleteButton.addEventListener('click', function() {
+							var index = recordings.indexOf(recording);
+							recordings.splice(index, 1);
+							counter--;
+							if (counter < 10){
+								submitButton.disabled = true;
+							}
+							recordingsList.removeChild(li);
+						});
+					});
+				})
+				.catch(function(error) {
+					console.log('getUserMedia error:', error);
+				});
+
+			// Add click event listener to record button
+			recordButton.addEventListener('click', function() {
+				if (mediaRecorder.state === 'inactive') {
+					mediaRecorder.start();
+					recordingStatus.textContent = 'Recording...';
+					recordButton.textContent = 'Stop';
+				} else {
+					mediaRecorder.stop();
+					recordingStatus.textContent = '';
+					recordButton.textContent = 'Record';
+				}
+			});
+		} else {
+			console.log('MediaRecorder is not supported on this browser.');
+		}
+		submitButton.addEventListener('click', function() {
+			
+			// create a FormData object to store the audio files
+			var formData = new FormData();
+		
+			// append each recording to the form data object
+			for (var i = 0; i < recordings.length; i++) {
+				formData.append('audio' + i, recordings[i].blob, 'audio' + i + '.wav');
+				
+			}
+		
+			// send the form data to Django using an AJAX request
+			var xhr = new XMLHttpRequest();
+			
+			xhr.open('POST', '');
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					console.log('All audio files uploaded successfully');
+				} 
+				else {
+					console.log('Error uploading audio files');
+				}
+			};
+			xhr.send(formData);
+		});
+	</script>
+	</form>
+	{% endblock %}
+</body>
+</html>
+
+
+       
