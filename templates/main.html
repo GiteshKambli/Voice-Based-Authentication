@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        
+        {% block content %}
+        
+        <form method="post" enctype="multipart/form-data" >{% csrf_token %}
+        
+        <input type="text" name="email" placeholder="email">
+        <input type="submit">
+        <div>My voice is my password.</div>
+        <div>This is me, authenticating with my voice.</div>
+        <div>I am who I say I am.</div>
+        <div>My voiceprint is unique to me.</div>
+        <div>I confirm my identity using my voice.</div>
+        <div>I am the authorized user of this account.</div>
+        <div>Please verify my identity through my voice.</div>
+        <div>My voice is the key to my account.</div>
+        <div>I authenticate my access using my voice.</div>
+        <div>Voice recognition confirms my identity.</div>
+        <div>My voice is the secure way to access my account.</div>
+        <div>I am authorizing this transaction with my voice.</div>
+        <div>I confirm that I am the authorized user by speaking this passphrase.</div>
+        <div>My voice is my unique identifier for authentication.</div>
+        <div>I use my voice to authenticate because it's secure and convenient.</div>
+        <div>My voiceprint is the only way to access my account.</div>
+        <div>I am speaking this passphrase to prove my identity.</div>
+
+
+        <div>{{message}}</div>
+
+        
+        
+        
+
+        <!-- {% for x in result %}
+        <div>{{x.phone}}</div>
+        </form>
+        {% endfor %} -->
+        
+        </form>
+        {% endblock %}
+        
+        
+
+
+    </center>
+    
+</body>
+</html>

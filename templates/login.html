@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        {% block content %}
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <input type="text" placeholder="email" name="email" >
+        <input type="submit">
+        <p>To authenticate Yorself, Press on the submit button and say the following sentences out loud</p>
+        <p>I confirm my identity using my voice.</p>
+        <p>My voice is the key to my account</p>
+        </form>
+        <div><input type="button" name="goback" value="Go back" action="login" id="button" disabled></div>
+        <!-- <script type="text/javascript">
+            // capturing the button using its id
+            const button1 = document.getElementById("button");
+            var a = JSON.parse("{{value|js}}");
+            // function to disable the button
+            const disableButton = () => {
+              button1.disabled = a;
+            };
+        
+            // calling the disableButton() function when the click event happens
+            button1.addEventListener("click", disableButton);
+          </script> -->
+        <div>{{message}}</div>
+        
+        {% endblock %}
+    </center>
+    
+    
+</body>
+</html>
